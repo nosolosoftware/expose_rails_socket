@@ -7,9 +7,7 @@ module ExposeRailsSocket
         @client_connection = client_connection
       end
 
-      def run
-        raw_command = @client_connection.recv(BUFFER)
-
+      def run(raw_command)
         command = parse_command(raw_command)
 
         result = if command.is_a?(Array)
@@ -49,7 +47,6 @@ module ExposeRailsSocket
 
       def write_error(error)
         @client_connection.write({code: 1, data: error}.to_json)
-      rescue Errno::EPIPE
       end
 
       def parse_command(raw_command)
